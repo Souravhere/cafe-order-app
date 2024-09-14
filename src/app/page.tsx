@@ -118,10 +118,10 @@ export default function Component() {
               <div className="p-4">
                 <h2 className="font-bold text-lg text-gray-800 mb-1">{product.name}</h2>
                 <p className="text-sm text-gray-600 mb-2">{product.description}</p>
-                <div className="flex justify-between items-center">
-                  <span className="font-bold text-gray-800">${product.price.toFixed(2)}</span>
+                <div className="sm:flex block justify-between items-center">
+                  <span className="font-bold text-gray-800">₹{product.price.toFixed(2)}</span>
                   <button 
-                    className="bg-green-500 text-white px-3 py-1 rounded-full text-sm hover:bg-green-600 transition-colors"
+                    className="bg-green-500 sm:w-1/2 w-full sm:my-0 my-1 text-white px-3 py-1 rounded-sm text-sm hover:bg-green-600 transition-colors"
                     onClick={() => addToCart(product)}
                   >
                     Add to Cart
