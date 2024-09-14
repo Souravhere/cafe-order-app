@@ -1,64 +1,68 @@
-'use client'
+"use client";
 
-import { useState, useEffect } from 'react'
-import Image from 'next/image'
-import { ShoppingCart, X, Plus, Minus } from 'lucide-react'
+import { useState, useEffect } from 'react';
+import Image from 'next/image';
+import { ShoppingCart, X, Plus, Minus } from 'lucide-react';
+import productsData from '../data/products.json'; // Ensure the path is correct
 
-const categories = ['All', 'Fruits', 'Salads', 'Soups', 'Grilled', 'Desserts']
+type Product = {
+  id: number;
+  name: string;
+  price: number;
+  description: string;
+  image: string;
+  category: string;
+};
 
-const getRandomColor = () => {
-  const colors = ['bg-red-100', 'bg-yellow-100', 'bg-green-100', 'bg-blue-100', 'bg-indigo-100', 'bg-purple-100', 'bg-pink-100']
-  return colors[Math.floor(Math.random() * colors.length)]
-}
+const categories = ['All', 'Fruits', 'Salads', 'Soups', 'Grilled', 'Desserts'];
 
 export default function Component() {
-  const [products, setProducts] = useState([])
-  const [cart, setCart] = useState([])
-  const [showCart, setShowCart] = useState(false)
-  const [activeCategory, setActiveCategory] = useState('All')
+  const [products, setProducts] = useState<Product[]>([]);
+  const [cart, setCart] = useState<Product[]>([]);
+  const [showCart, setShowCart] = useState(false);
+  const [activeCategory, setActiveCategory] = useState('All');
 
-  // Fetch products from the JSON file in src folder
   useEffect(() => {
-    const fetchProducts = async () => {
-      try {
-        const response = await import('../data/products.json')
-        setProducts(response.products)
-      } catch (error) {
-        console.error('Error loading products:', error)
-      }
+    if (productsData && Array.isArray(productsData.products)) {
+      setProducts(productsData.products); // Correctly set products from nested data
+    } else {
+      console.error("Invalid products data format:", productsData);
     }
-    fetchProducts()
-  }, [])
+  }, []);
 
-  const addToCart = (product) => {
+  const addToCart = (product: Product) => {
     setCart(prevCart => {
-      const existingItem = prevCart.find(item => item.id === product.id)
+      const existingItem = prevCart.find(item => item.id === product.id);
       if (existingItem) {
         return prevCart.map(item =>
           item.id === product.id ? { ...item, quantity: item.quantity + 1 } : item
-        )
+        );
       }
-      return [...prevCart, { ...product, quantity: 1 }]
-    })
-  }
+      return [...prevCart, { ...product, quantity: 1 }];
+    });
+  };
 
-  const removeFromCart = (productId) => {
-    setCart(prevCart => prevCart.filter(item => item.id !== productId))
-  }
+  const removeFromCart = (productId: number) => {
+    setCart(prevCart => prevCart.filter(item => item.id !== productId));
+  };
 
-  const updateQuantity = (productId, change) => {
-    setCart(prevCart => prevCart.map(item => 
-      item.id === productId 
-        ? { ...item, quantity: Math.max(0, item.quantity + change) } 
-        : item
-    ).filter(item => item.quantity > 0))
-  }
+  const updateQuantity = (productId: number, change: number) => {
+    setCart(prevCart =>
+      prevCart
+        .map(item =>
+          item.id === productId
+            ? { ...item, quantity: Math.max(0, item.quantity + change) }
+            : item
+        )
+        .filter(item => item.quantity > 0)
+    );
+  };
 
-  const totalPrice = cart.reduce((sum, item) => sum + item.price * item.quantity, 0)
+  const totalPrice = cart.reduce((sum, item) => sum + item.price * item.quantity, 0);
 
-  const filteredProducts = activeCategory === 'All' 
-    ? products 
-    : products.filter(product => product.category === activeCategory)
+  const filteredProducts = activeCategory === 'All'
+    ? products
+    : products.filter(product => product.category === activeCategory);
 
   return (
     <div className="bg-gray-100 min-h-screen">
@@ -101,7 +105,7 @@ export default function Component() {
           {filteredProducts.map((product) => (
             <div 
               key={product.id} 
-              className={`rounded-lg overflow-hidden shadow-md ${getRandomColor()}`}
+              className={`rounded-lg overflow-hidden shadow-md bg-gray-100`}
             >
               <div className="relative h-40">
                 <Image
@@ -186,5 +190,5 @@ export default function Component() {
         </div>
       )}
     </div>
-  )
+  );
 }
