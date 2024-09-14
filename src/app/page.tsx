@@ -7,7 +7,7 @@ import { ShoppingCart, X, Plus, Minus } from 'lucide-react'
 const categories = ['All', 'Fruits', 'Salads', 'Soups', 'Grilled', 'Desserts']
 
 const products = [
-  { id: 1, name: 'Green Salad', price: 10, description: 'Fresh daily salads delivered to your door', image: "/public/chicken-pizza", category: 'Salads' },
+  { id: 1, name: 'Green Salad', price: 10, description: 'Fresh daily salads delivered to your door', image: "https://i.pinimg.com/564x/24/8f/c1/248fc12c903cf6c7cd170b35f236fcd7.jpg", category: 'Salads' },
   { id: 2, name: 'Veg Soup', price: 12, description: 'Hearty vegetable soup', image: '/placeholder.svg?height=200&width=200&text=Veg+Soup', category: 'Soups' },
   { id: 3, name: 'Tuna Salad', price: 15, description: 'Made with premium tuna', image: '/placeholder.svg?height=200&width=200&text=Tuna+Salad', category: 'Salads' },
   { id: 4, name: 'Grilled Chicken', price: 18, description: 'Tender grilled chicken breast', image: '/placeholder.svg?height=200&width=200&text=Grilled+Chicken', category: 'Grilled' },
