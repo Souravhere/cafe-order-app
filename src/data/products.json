@@ -1,0 +1,53 @@
+{
+    "products": [
+      {
+        "id": 1,
+        "name": "Green Salad",
+        "price": 10,
+        "description": "Fresh daily salads delivered to your door",
+        "image": "/chicken-pizza",
+        "category": "Salads"
+      },
+      {
+        "id": 2,
+        "name": "Veg Soup",
+        "price": 12,
+        "description": "Hearty vegetable soup",
+        "image": "/placeholder.svg?height=200&width=200&text=Veg+Soup",
+        "category": "Soups"
+      },
+      {
+        "id": 3,
+        "name": "Tuna Salad",
+        "price": 15,
+        "description": "Made with premium tuna",
+        "image": "/placeholder.svg?height=200&width=200&text=Tuna+Salad",
+        "category": "Salads"
+      },
+      {
+        "id": 4,
+        "name": "Grilled Chicken",
+        "price": 18,
+        "description": "Tender grilled chicken breast",
+        "image": "/placeholder.svg?height=200&width=200&text=Grilled+Chicken",
+        "category": "Grilled"
+      },
+      {
+        "id": 5,
+        "name": "Fruit Platter",
+        "price": 14,
+        "description": "Assorted fresh fruits",
+        "image": "/placeholder.svg?height=200&width=200&text=Fruit+Platter",
+        "category": "Fruits"
+      },
+      {
+        "id": 6,
+        "name": "Chocolate Mousse",
+        "price": 8,
+        "description": "Rich and creamy dessert",
+        "image": "/placeholder.svg?height=200&width=200&text=Chocolate+Mousse",
+        "category": "Desserts"
+      }
+    ]
+  }
+  
