@@ -6,24 +6,29 @@ import { ShoppingCart, X, Plus, Minus } from 'lucide-react'
 
 const categories = ['All', 'Fruits', 'Salads', 'Soups', 'Grilled', 'Desserts']
 
-const products = [
-  { id: 1, name: 'Green Salad', price: 10, description: 'Fresh daily salads delivered to your door', image: "https://i.pinimg.com/564x/24/8f/c1/248fc12c903cf6c7cd170b35f236fcd7.jpg", category: 'Salads' },
-  { id: 2, name: 'Veg Soup', price: 12, description: 'Hearty vegetable soup', image: '/placeholder.svg?height=200&width=200&text=Veg+Soup', category: 'Soups' },
-  { id: 3, name: 'Tuna Salad', price: 15, description: 'Made with premium tuna', image: '/placeholder.svg?height=200&width=200&text=Tuna+Salad', category: 'Salads' },
-  { id: 4, name: 'Grilled Chicken', price: 18, description: 'Tender grilled chicken breast', image: '/placeholder.svg?height=200&width=200&text=Grilled+Chicken', category: 'Grilled' },
-  { id: 5, name: 'Fruit Platter', price: 14, description: 'Assorted fresh fruits', image: '/placeholder.svg?height=200&width=200&text=Fruit+Platter', category: 'Fruits' },
-  { id: 6, name: 'Chocolate Mousse', price: 8, description: 'Rich and creamy dessert', image: '/placeholder.svg?height=200&width=200&text=Chocolate+Mousse', category: 'Desserts' },
-]
-
 const getRandomColor = () => {
   const colors = ['bg-red-100', 'bg-yellow-100', 'bg-green-100', 'bg-blue-100', 'bg-indigo-100', 'bg-purple-100', 'bg-pink-100']
   return colors[Math.floor(Math.random() * colors.length)]
 }
 
 export default function Component() {
+  const [products, setProducts] = useState([])
   const [cart, setCart] = useState([])
   const [showCart, setShowCart] = useState(false)
   const [activeCategory, setActiveCategory] = useState('All')
+
+  // Fetch products from the JSON file in src folder
+  useEffect(() => {
+    const fetchProducts = async () => {
+      try {
+        const response = await import('../data/products.json')
+        setProducts(response.products)
+      } catch (error) {
+        console.error('Error loading products:', error)
+      }
+    }
+    fetchProducts()
+  }, [])
 
   const addToCart = (product) => {
     setCart(prevCart => {
