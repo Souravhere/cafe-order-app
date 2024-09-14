@@ -4,29 +4,26 @@ import { useState, useEffect } from 'react'
 import Image from 'next/image'
 import { ShoppingCart, X, Plus, Minus } from 'lucide-react'
 
+const categories = ['All', 'Fruits', 'Salads', 'Soups', 'Grilled', 'Desserts']
+
 const products = [
-  { id: 1, name: 'Green Salad', price: 10, description: 'Freshly daily salads deliver at your door step', image: '/placeholder.svg?height=200&width=200&text=Green+Salad', color: 'bg-yellow-100' },
-  { id: 2, name: 'Veg Salad', price: 12, description: 'Freshly daily salads', image: '/placeholder.svg?height=200&width=200&text=Veg+Salad', color: 'bg-blue-100' },
-  { id: 3, name: 'Tuna Salad', price: 15, description: 'Made with Tuna ingredients', image: '/placeholder.svg?height=200&width=200&text=Tuna+Salad', color: 'bg-pink-100' },
-  { id: 4, name: 'Shrimp Salad', price: 18, description: 'Made with love and fresh sea food deliver at your', image: '/placeholder.svg?height=200&width=200&text=Shrimp+Salad', color: 'bg-purple-100' },
+  { id: 1, name: 'Green Salad', price: 10, description: 'Fresh daily salads delivered to your door', image: "/public/chicken-pizza", category: 'Salads' },
+  { id: 2, name: 'Veg Soup', price: 12, description: 'Hearty vegetable soup', image: '/placeholder.svg?height=200&width=200&text=Veg+Soup', category: 'Soups' },
+  { id: 3, name: 'Tuna Salad', price: 15, description: 'Made with premium tuna', image: '/placeholder.svg?height=200&width=200&text=Tuna+Salad', category: 'Salads' },
+  { id: 4, name: 'Grilled Chicken', price: 18, description: 'Tender grilled chicken breast', image: '/placeholder.svg?height=200&width=200&text=Grilled+Chicken', category: 'Grilled' },
+  { id: 5, name: 'Fruit Platter', price: 14, description: 'Assorted fresh fruits', image: '/placeholder.svg?height=200&width=200&text=Fruit+Platter', category: 'Fruits' },
+  { id: 6, name: 'Chocolate Mousse', price: 8, description: 'Rich and creamy dessert', image: '/placeholder.svg?height=200&width=200&text=Chocolate+Mousse', category: 'Desserts' },
 ]
 
-const categories = ['Fruits', 'Salads & Soups', 'Grilled']
+const getRandomColor = () => {
+  const colors = ['bg-red-100', 'bg-yellow-100', 'bg-green-100', 'bg-blue-100', 'bg-indigo-100', 'bg-purple-100', 'bg-pink-100']
+  return colors[Math.floor(Math.random() * colors.length)]
+}
 
 export default function Component() {
   const [cart, setCart] = useState([])
-  const [isMobile, setIsMobile] = useState(true)
   const [showCart, setShowCart] = useState(false)
-  const [activeCategory, setActiveCategory] = useState('Salads & Soups')
-
-  useEffect(() => {
-    const checkMobile = () => {
-      setIsMobile(window.innerWidth <= 768)
-    }
-    checkMobile()
-    window.addEventListener('resize', checkMobile)
-    return () => window.removeEventListener('resize', checkMobile)
-  }, [])
+  const [activeCategory, setActiveCategory] = useState('All')
 
   const addToCart = (product) => {
     setCart(prevCart => {
@@ -54,30 +51,20 @@ export default function Component() {
 
   const totalPrice = cart.reduce((sum, item) => sum + item.price * item.quantity, 0)
 
-  if (!isMobile) {
-    return (
-      <div className="fixed inset-0 flex items-center justify-center bg-gray-100 bg-opacity-75 backdrop-blur-md">
-        <div className="bg-white p-8 rounded-lg shadow-lg text-center">
-          <h2 className="text-2xl font-bold mb-4">This website is for mobile devices only</h2>
-          <p className="mb-4">Please scan the QR code below to open on your mobile device:</p>
-          <Image 
-            src="/placeholder.svg?height=200&width=200&text=QR+Code" 
-            alt="QR Code" 
-            width={200} 
-            height={200} 
-            className="mx-auto"
-          />
-        </div>
-      </div>
-    )
-  }
+  const filteredProducts = activeCategory === 'All' 
+    ? products 
+    : products.filter(product => product.category === activeCategory)
 
   return (
     <div className="bg-gray-100 min-h-screen">
-      <header className="bg-white p-4 shadow-md">
-        <div className="flex justify-between items-center">
+      <header className="bg-white p-4 shadow-md sticky top-0 z-10">
+        <div className="flex justify-between items-center mb-4">
           <h1 className="text-2xl font-bold text-gray-800">Eat Healthy</h1>
-          <button className="relative p-2" onClick={() => setShowCart(true)}>
+          <button 
+            className="relative p-2" 
+            onClick={() => setShowCart(true)}
+            aria-label="Open cart"
+          >
             <ShoppingCart className="text-gray-600" />
             {cart.length > 0 && (
               <span className="absolute top-0 right-0 bg-red-500 text-white rounded-full w-5 h-5 flex items-center justify-center text-xs">
@@ -86,8 +73,8 @@ export default function Component() {
             )}
           </button>
         </div>
-        <p className="text-gray-600 mt-1">Our Daily Healthy meals Plans</p>
-        <div className="flex space-x-2 mt-4 overflow-x-auto pb-2">
+        <p className="text-gray-600 mb-4">Our Daily Healthy Meal Plans</p>
+        <div className="flex space-x-2 overflow-x-auto pb-2">
           {categories.map((category, index) => (
             <button 
               key={index} 
@@ -106,17 +93,12 @@ export default function Component() {
 
       <main className="p-4">
         <div className="grid grid-cols-2 gap-4">
-          {products.map((product) => (
+          {filteredProducts.map((product) => (
             <div 
               key={product.id} 
-              className={`rounded-lg overflow-hidden shadow-md ${product.color}`}
-              style={{
-                aspectRatio: '1 / 1.2',
-                display: 'flex',
-                flexDirection: 'column'
-              }}
+              className={`rounded-lg overflow-hidden shadow-md ${getRandomColor()}`}
             >
-              <div className="relative h-3/5">
+              <div className="relative h-40">
                 <Image
                   src={product.image}
                   alt={product.name}
@@ -124,18 +106,16 @@ export default function Component() {
                   objectFit="cover"
                 />
               </div>
-              <div className="p-4 flex flex-col justify-between flex-grow">
-                <div>
-                  <h2 className="font-bold text-lg text-gray-800">{product.name}</h2>
-                  <p className="text-sm text-gray-600">{product.description}</p>
-                </div>
-                <div className="flex justify-between items-center mt-2">
+              <div className="p-4">
+                <h2 className="font-bold text-lg text-gray-800 mb-1">{product.name}</h2>
+                <p className="text-sm text-gray-600 mb-2">{product.description}</p>
+                <div className="flex justify-between items-center">
                   <span className="font-bold text-gray-800">${product.price.toFixed(2)}</span>
                   <button 
                     className="bg-green-500 text-white px-3 py-1 rounded-full text-sm hover:bg-green-600 transition-colors"
                     onClick={() => addToCart(product)}
                   >
-                    Add
+                    Add to Cart
                   </button>
                 </div>
               </div>
@@ -145,11 +125,15 @@ export default function Component() {
       </main>
 
       {showCart && (
-        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+        <div className="fixed inset-0 bg-black backdrop-blur-sm text-black bg-opacity-50 flex items-center justify-center z-50">
           <div className="bg-white p-4 rounded-lg max-w-md w-full max-h-[80vh] overflow-y-auto">
             <div className="flex justify-between items-center mb-4">
               <h2 className="text-xl font-bold">Your Cart</h2>
-              <button onClick={() => setShowCart(false)} className="text-gray-500 hover:text-gray-700">
+              <button 
+                onClick={() => setShowCart(false)} 
+                className="text-gray-500 hover:text-gray-700"
+                aria-label="Close cart"
+              >
                 <X size={24} />
               </button>
             </div>
@@ -161,21 +145,33 @@ export default function Component() {
                   <div key={item.id} className="flex justify-between items-center mb-2 pb-2 border-b">
                     <span className="font-medium">{item.name}</span>
                     <div className="flex items-center">
-                      <button onClick={() => updateQuantity(item.id, -1)} className="px-2 py-1 bg-gray-200 rounded-l">
+                      <button 
+                        onClick={() => updateQuantity(item.id, -1)} 
+                        className="px-2 py-1 bg-gray-200 rounded-l"
+                        aria-label={`Decrease quantity of ${item.name}`}
+                      >
                         <Minus size={16} />
                       </button>
                       <span className="px-3 py-1 bg-gray-100">{item.quantity}</span>
-                      <button onClick={() => updateQuantity(item.id, 1)} className="px-2 py-1 bg-gray-200 rounded-r">
+                      <button 
+                        onClick={() => updateQuantity(item.id, 1)} 
+                        className="px-2 py-1 bg-gray-200 rounded-r"
+                        aria-label={`Increase quantity of ${item.name}`}
+                      >
                         <Plus size={16} />
                       </button>
-                      <span className="ml-4 min-w-[60px] text-right">${(item.price * item.quantity).toFixed(2)}</span>
-                      <button onClick={() => removeFromCart(item.id)} className="ml-2 text-red-500 hover:text-red-700">
+                      <span className="ml-4 min-w-[60px] text-right">₹{(item.price * item.quantity).toFixed(2)}</span>
+                      <button 
+                        onClick={() => removeFromCart(item.id)} 
+                        className="ml-2 text-red-500 hover:text-red-700"
+                        aria-label={`Remove ${item.name} from cart`}
+                      >
                         <X size={20} />
                       </button>
                     </div>
                   </div>
                 ))}
-                <div className="mt-4 text-xl font-bold">Total: ${totalPrice.toFixed(2)}</div>
+                <div className="mt-4 text-xl font-bold">Total: ₹{totalPrice.toFixed(2)}</div>
                 <button className="mt-4 w-full bg-green-500 text-white py-2 px-4 rounded-lg hover:bg-green-600 transition-colors">
                   Proceed to Checkout
                 </button>
