@@ -3,7 +3,8 @@
 import { useState, useEffect } from 'react';
 import Image from 'next/image';
 import { ShoppingCart, X, Plus, Minus } from 'lucide-react';
-import productsData from '../data/products.json'; // Ensure the path is correct
+import { Trash2 } from 'lucide-react';
+import productsData from '../data/products.json';
 
 // Define Product type
 type Product = {
@@ -139,7 +140,7 @@ export default function Component() {
 
       {showCart && (
         <div className="fixed inset-0 bg-black backdrop-blur-sm text-black bg-opacity-50 flex items-center justify-center z-50">
-          <div className="bg-white p-4 rounded-lg max-w-md w-full max-h-[80vh] overflow-y-auto">
+          <div className="bg-white sm:mx-0 mx-3 p-4 rounded-lg max-w-md w-full max-h-[80vh] overflow-y-auto">
             <div className="flex justify-between items-center mb-4">
               <h2 className="text-xl font-bold">Your Cart</h2>
               <button 
@@ -179,7 +180,7 @@ export default function Component() {
                         className="ml-2 text-red-500 hover:text-red-700"
                         aria-label={`Remove ${item.name} from cart`}
                       >
-                        <X size={20} />
+                        <Trash2 size={20} />
                       </button>
                     </div>
                   </div>
