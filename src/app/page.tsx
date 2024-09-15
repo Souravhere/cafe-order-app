@@ -5,6 +5,7 @@ import Image from 'next/image';
 import { ShoppingCart, X, Plus, Minus } from 'lucide-react';
 import productsData from '../data/products.json'; // Ensure the path is correct
 
+// Define Product type
 type Product = {
   id: number;
   name: string;
@@ -14,11 +15,14 @@ type Product = {
   category: string;
 };
 
+// Create a CartItem type that includes quantity
+type CartItem = Product & { quantity: number };
+
 const categories = ['All', 'Fruits', 'Salads', 'Soups', 'Grilled', 'Desserts'];
 
 export default function Component() {
   const [products, setProducts] = useState<Product[]>([]);
-  const [cart, setCart] = useState<Product[]>([]);
+  const [cart, setCart] = useState<CartItem[]>([]); // Use CartItem type for cart
   const [showCart, setShowCart] = useState(false);
   const [activeCategory, setActiveCategory] = useState('All');
 
