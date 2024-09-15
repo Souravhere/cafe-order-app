@@ -72,7 +72,7 @@ export default function Component() {
     <div className="bg-gray-100 min-h-screen">
       <header className="bg-white p-4 shadow-md sticky top-0 z-10">
         <div className="flex justify-between items-center mb-4">
-          <h1 className="text-2xl font-bold text-gray-800">Eat Healthy</h1>
+          <h1 className="text-2xl font-bold text-gray-800">Your Cafe</h1>
           <button 
             className="relative p-2" 
             onClick={() => setShowCart(true)}
@@ -105,7 +105,7 @@ export default function Component() {
       </header>
 
       <main className="p-4">
-        <div className="grid grid-cols-2 gap-4">
+        <div className="grid sm:grid-cols-3 grid-cols-2 gap-4">
           {filteredProducts.map((product) => (
             <div 
               key={product.id} 
