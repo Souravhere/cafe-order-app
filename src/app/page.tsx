@@ -37,12 +37,22 @@ export default function Component() {
 
   const addToCart = (product: Product) => {
     setCart(prevCart => {
+      if (prevCart.length >= 5) {
+        alert('You can only add up to 5 different items to the cart.');
+        return prevCart;
+      }
+
       const existingItem = prevCart.find(item => item.id === product.id);
       if (existingItem) {
+        if (existingItem.quantity >= 5) {
+          alert('You can only add up to 5 units of each item.');
+          return prevCart;
+        }
         return prevCart.map(item =>
           item.id === product.id ? { ...item, quantity: item.quantity + 1 } : item
         );
       }
+
       return [...prevCart, { ...product, quantity: 1 }];
     });
   };
@@ -54,12 +64,17 @@ export default function Component() {
   const updateQuantity = (productId: number, change: number) => {
     setCart(prevCart =>
       prevCart
-        .map(item =>
-          item.id === productId
-            ? { ...item, quantity: Math.max(0, item.quantity + change) }
-            : item
-        )
-        .filter(item => item.quantity > 0)
+        .map(item => {
+          if (item.id === productId) {
+            const newQuantity = item.quantity + change;
+            if (newQuantity > 5) {
+              alert('You can only add up to 5 units of each item.');
+              return item;
+            }
+            return { ...item, quantity: Math.max(1, newQuantity) };
+          }
+          return item;
+        })
     );
   };
 
