@@ -224,8 +224,8 @@ export default function Component() {
       )}
 
       {popup.isOpen && (
-        <div className="fixed bottom-4 right-4 bg-white border border-gray-200 rounded-lg shadow-lg p-4 max-w-sm animate-fade-in-up">
-          <p className="text-gray-800">{popup.message}</p>
+        <div className="fixed z-50 bottom-4 right-4 bg-red-600 font-semibold rounded-lg shadow-lg p-4 max-w-sm animate-fade-in-up">
+          <p className="text-white">{popup.message}</p>
         </div>
       )}
     </div>
