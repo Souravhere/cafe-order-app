@@ -5,6 +5,7 @@ import Image from 'next/image';
 import { ShoppingCart, X, Plus, Minus } from 'lucide-react';
 import { Trash2 } from 'lucide-react';
 import productsData from '../data/products.json';
+import CheckoutForm from '../Components/CheckoutForm';
 
 // Define Product type
 type Product = {
@@ -33,6 +34,7 @@ export default function Component() {
   const [showCart, setShowCart] = useState(false);
   const [activeCategory, setActiveCategory] = useState('All');
   const [popup, setPopup] = useState<Popup>({ message: '', isOpen: false });
+  const [isCheckingOut, setIsCheckingOut] = useState(false);
 
   useEffect(() => {
     if (productsData && Array.isArray(productsData.products)) {
@@ -96,6 +98,14 @@ export default function Component() {
   const filteredProducts = activeCategory === 'All'
     ? products
     : products.filter(product => product.category === activeCategory);
+
+  const handleCheckout = (formData: { tableNo: string; name: string; phoneNo: string }) => {
+    console.log('Order placed:', { ...formData, cart, totalPrice });
+    setCart([]);
+    setShowCart(false);
+    setIsCheckingOut(false);
+    showPopup('Order placed successfully!');
+  };
 
   return (
     <div className="bg-gray-100 min-h-screen">
@@ -170,18 +180,19 @@ export default function Component() {
         <div className="fixed inset-0 bg-black backdrop-blur-sm text-black bg-opacity-50 flex items-center justify-center z-50">
           <div className="bg-white sm:mx-0 mx-3 p-4 rounded-lg max-w-md w-full max-h-[80vh] overflow-y-auto">
             <div className="flex justify-between items-center mb-4">
-              <h2 className="text-xl font-bold">Your Cart</h2>
+              <h2 className="text-xl font-bold">{isCheckingOut ? 'Checkout' : 'Your Cart'}</h2>
               <button 
-                onClick={() => setShowCart(false)} 
+                onClick={() => {
+                  setShowCart(false);
+                  setIsCheckingOut(false);
+                }} 
                 className="text-gray-500 hover:text-gray-700"
                 aria-label="Close cart"
               >
                 <X size={24} />
               </button>
             </div>
-            {cart.length === 0 ? (
-              <p>Your cart is empty.</p>
-            ) : (
+            {!isCheckingOut ? (
               <>
                 {cart.map(item => (
                   <div key={item.id} className="flex justify-between items-center mb-2 pb-2 border-b">
@@ -214,10 +225,18 @@ export default function Component() {
                   </div>
                 ))}
                 <div className="mt-4 text-xl font-bold">Total: ₹{totalPrice.toFixed(2)}</div>
-                <button className="mt-4 w-full bg-green-500 text-white py-2 px-4 rounded-lg hover:bg-green-600 transition-colors">
+                <button 
+                  className="mt-4 w-full bg-green-500 text-white py-2 px-4 rounded-lg hover:bg-green-600 transition-colors"
+                  onClick={() => setIsCheckingOut(true)}
+                >
                   Proceed to Checkout
                 </button>
               </>
+            ) : (
+              <CheckoutForm 
+                onSubmit={handleCheckout}
+                onCancel={() => setIsCheckingOut(false)}
+              />
             )}
           </div>
         </div>
