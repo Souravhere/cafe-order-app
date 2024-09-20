@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import Image from 'next/image';
 import { ShoppingCart, X, Plus, Minus } from 'lucide-react';
 import { Trash2 } from 'lucide-react';
@@ -21,11 +21,18 @@ type CartItem = Product & { quantity: number };
 
 const categories = ['All', 'Fruits', 'Salads', 'Soups', 'Grilled', 'Desserts'];
 
+// Add this new type for the popup
+type Popup = {
+  message: string;
+  isOpen: boolean;
+};
+
 export default function Component() {
   const [products, setProducts] = useState<Product[]>([]);
   const [cart, setCart] = useState<CartItem[]>([]); // Use CartItem type for cart
   const [showCart, setShowCart] = useState(false);
   const [activeCategory, setActiveCategory] = useState('All');
+  const [popup, setPopup] = useState<Popup>({ message: '', isOpen: false });
 
   useEffect(() => {
     if (productsData && Array.isArray(productsData.products)) {
@@ -35,17 +42,23 @@ export default function Component() {
     }
   }, []);
 
+  // Add this new function to show popups
+  const showPopup = useCallback((message: string) => {
+    setPopup({ message, isOpen: true });
+    setTimeout(() => setPopup({ message: '', isOpen: false }), 3000); // Auto-close after 3 seconds
+  }, []);
+
   const addToCart = (product: Product) => {
     setCart(prevCart => {
       if (prevCart.length >= 5) {
-        alert('You can only add up to 5 different items to the cart.');
+        showPopup('You can only add up to 5 different items to the cart.');
         return prevCart;
       }
 
       const existingItem = prevCart.find(item => item.id === product.id);
       if (existingItem) {
         if (existingItem.quantity >= 5) {
-          alert('You can only add up to 5 units of each item.');
+          showPopup('You can only add up to 5 units of each item.');
           return prevCart;
         }
         return prevCart.map(item =>
@@ -68,7 +81,7 @@ export default function Component() {
           if (item.id === productId) {
             const newQuantity = item.quantity + change;
             if (newQuantity > 5) {
-              alert('You can only add up to 5 units of each item.');
+              showPopup('You can only add up to 5 units of each item.');
               return item;
             }
             return { ...item, quantity: Math.max(1, newQuantity) };
@@ -209,6 +222,36 @@ export default function Component() {
           </div>
         </div>
       )}
+
+      {popup.isOpen && (
+        <div className="fixed bottom-4 right-4 bg-white border border-gray-200 rounded-lg shadow-lg p-4 max-w-sm animate-fade-in-up">
+          <p className="text-gray-800">{popup.message}</p>
+        </div>
+      )}
     </div>
   );
+}
+
+// Add this at the end of the file
+const fadeInUp = `
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+.animate-fade-in-up {
+  animation: fadeInUp 0.3s ease-out;
+}
+`;
+
+// Add the styles to the document
+if (typeof document !== 'undefined') {
+  const style = document.createElement('style');
+  style.textContent = fadeInUp;
+  document.head.appendChild(style);
 }
