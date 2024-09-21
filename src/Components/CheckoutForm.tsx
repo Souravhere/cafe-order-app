@@ -24,7 +24,7 @@ const CheckoutForm: React.FC<CheckoutFormProps> = ({ onSubmit, onCancel }) => {
   };
 
   return (
-    <div className="bg-white shadow-md rounded-lg overflow-hidden w-full max-w-sm mx-auto">
+    <div className="bg-white shadow-md rounded-lg overflow-hidden w-full max-w-sm mx-auto h-fit">
       <div className="bg-green-500 text-white py-3 px-4">
         <h2 className="text-xl font-semibold">Checkout</h2>
       </div>
