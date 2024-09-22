@@ -178,7 +178,7 @@ export default function Component() {
 
       {showCart && (
         <div className="fixed inset-0 bg-black backdrop-blur-sm text-black bg-opacity-50 flex items-center justify-center z-50">
-          <div className="bg-white sm:mx-0 mx-3 p-4 rounded-lg max-w-md w-full sm:max-h-[80vh] h-fit max-h-0-[80vh] overflow-y-auto">
+          <div className="bg-white sm:mx-0 mx-3 p-4 rounded-lg max-w-md w-full h-auto max-h-[90vh] overflow-y-auto">
             <div className="flex justify-between items-center mb-4">
               <h2 className="text-xl font-bold">{isCheckingOut ? 'Checkout' : 'Your Cart'}</h2>
               <button 
@@ -192,52 +192,54 @@ export default function Component() {
                 <X size={24} />
               </button>
             </div>
-            {!isCheckingOut ? (
-              <>
-                {cart.map(item => (
-                  <div key={item.id} className="flex justify-between items-center mb-2 pb-2 border-b">
-                    <span className="font-medium">{item.name}</span>
-                    <div className="flex items-center">
-                      <button 
-                        onClick={() => updateQuantity(item.id, -1)} 
-                        className="px-2 py-1 bg-gray-200 rounded-l"
-                        aria-label={`Decrease quantity of ${item.name}`}
-                      >
-                        <Minus size={16} />
-                      </button>
-                      <span className="px-3 py-1 bg-gray-100">{item.quantity}</span>
-                      <button 
-                        onClick={() => updateQuantity(item.id, 1)} 
-                        className="px-2 py-1 bg-gray-200 rounded-r"
-                        aria-label={`Increase quantity of ${item.name}`}
-                      >
-                        <Plus size={16} />
-                      </button>
-                      <span className="ml-4 min-w-[60px] text-right">₹{(item.price * item.quantity).toFixed(2)}</span>
-                      <button 
-                        onClick={() => removeFromCart(item.id)} 
-                        className="ml-2 text-red-500 hover:text-red-700"
-                        aria-label={`Remove ${item.name} from cart`}
-                      >
-                        <Trash2 size={20} />
-                      </button>
+            <div className="overflow-y-auto max-h-[calc(90vh-8rem)]">
+              {!isCheckingOut ? (
+                <>
+                  {cart.map(item => (
+                    <div key={item.id} className="flex justify-between items-center mb-2 pb-2 border-b">
+                      <span className="font-medium">{item.name}</span>
+                      <div className="flex items-center">
+                        <button 
+                          onClick={() => updateQuantity(item.id, -1)} 
+                          className="px-2 py-1 bg-gray-200 rounded-l"
+                          aria-label={`Decrease quantity of ${item.name}`}
+                        >
+                          <Minus size={16} />
+                        </button>
+                        <span className="px-3 py-1 bg-gray-100">{item.quantity}</span>
+                        <button 
+                          onClick={() => updateQuantity(item.id, 1)} 
+                          className="px-2 py-1 bg-gray-200 rounded-r"
+                          aria-label={`Increase quantity of ${item.name}`}
+                        >
+                          <Plus size={16} />
+                        </button>
+                        <span className="ml-4 min-w-[60px] text-right">₹{(item.price * item.quantity).toFixed(2)}</span>
+                        <button 
+                          onClick={() => removeFromCart(item.id)} 
+                          className="ml-2 text-red-500 hover:text-red-700"
+                          aria-label={`Remove ${item.name} from cart`}
+                        >
+                          <Trash2 size={20} />
+                        </button>
+                      </div>
                     </div>
-                  </div>
-                ))}
-                <div className="mt-4 text-xl font-bold">Total: ₹{totalPrice.toFixed(2)}</div>
-                <button 
-                  className="mt-4 w-full bg-green-500 text-white py-2 px-4 rounded-lg hover:bg-green-600 transition-colors"
-                  onClick={() => setIsCheckingOut(true)}
-                >
-                  Proceed to Checkout
-                </button>
-              </>
-            ) : (
-              <CheckoutForm 
-                onSubmit={handleCheckout}
-                onCancel={() => setIsCheckingOut(false)}
-              />
-            )}
+                  ))}
+                  <div className="mt-4 text-xl font-bold">Total: ₹{totalPrice.toFixed(2)}</div>
+                  <button 
+                    className="mt-4 w-full bg-green-500 text-white py-2 px-4 rounded-lg hover:bg-green-600 transition-colors"
+                    onClick={() => setIsCheckingOut(true)}
+                  >
+                    Proceed to Checkout
+                  </button>
+                </>
+              ) : (
+                <CheckoutForm 
+                  onSubmit={handleCheckout}
+                  onCancel={() => setIsCheckingOut(false)}
+                />
+              )}
+            </div>
           </div>
         </div>
       )}
