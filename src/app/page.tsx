@@ -100,7 +100,32 @@ export default function Component() {
     : products.filter(product => product.category === activeCategory);
 
   const handleCheckout = (formData: { tableNo: string; name: string; phoneNo: string }) => {
-    console.log('Order placed:', { ...formData, cart, totalPrice });
+    const orderDetails = {
+      customerInfo: formData,
+      items: cart.map(item => ({
+        name: item.name,
+        quantity: item.quantity,
+        price: item.price,
+        totalItemPrice: item.price * item.quantity
+      })),
+      totalPrice: totalPrice
+    };
+
+    console.log('Order placed:', orderDetails);
+
+    // Log individual details for easier reading
+    console.log('Customer Information:');
+    console.log('Table Number:', formData.tableNo);
+    console.log('Name:', formData.name);
+    console.log('Phone Number:', formData.phoneNo);
+    
+    console.log('\nOrdered Items:');
+    cart.forEach(item => {
+      console.log(`${item.name} - Quantity: ${item.quantity}, Price: ₹${item.price.toFixed(2)}, Total: ₹${(item.price * item.quantity).toFixed(2)}`);
+    });
+    
+    console.log('\nTotal Order Price:', `₹${totalPrice.toFixed(2)}`);
+
     setCart([]);
     setShowCart(false);
     setIsCheckingOut(false);
