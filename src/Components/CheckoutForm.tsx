@@ -24,7 +24,7 @@ const CheckoutForm: React.FC<CheckoutFormProps> = ({ onSubmit, onCancel }) => {
   };
 
   return (
-    <div className="bg-white shadow-md rounded-lg overflow-hidden w-full max-w-sm mx-auto h-fit">
+    <div className="bg-white shadow-md rounded-lg overflow-hidden w-full max-w-sm mx-auto">
       <div className="bg-green-500 text-white py-3 px-4">
         <h2 className="text-xl font-semibold">Checkout</h2>
       </div>
@@ -34,7 +34,7 @@ const CheckoutForm: React.FC<CheckoutFormProps> = ({ onSubmit, onCancel }) => {
           { name: 'name', label: 'Your Name', icon: User, type: 'text' },
           { name: 'phoneNo', label: 'Phone Number', icon: Phone, type: 'tel' },
         ].map(({ name, label, icon: Icon, type }) => (
-          <div key={name}>
+          <div key={name} className="mb-4">
             <label htmlFor={name} className="block text-sm font-medium text-gray-700 mb-1">
               {label}
             </label>
