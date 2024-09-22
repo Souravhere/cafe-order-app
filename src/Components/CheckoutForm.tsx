@@ -12,15 +12,27 @@ const CheckoutForm: React.FC<CheckoutFormProps> = ({ onSubmit, onCancel }) => {
     name: '',
     phoneNo: '',
   });
+  const [tableNoError, setTableNoError] = useState('');
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
     setFormData(prevData => ({ ...prevData, [name]: value }));
+
+    if (name === 'tableNo') {
+      const tableNumber = parseInt(value);
+      if (isNaN(tableNumber) || tableNumber < 1 || tableNumber > 12) {
+        setTableNoError('Table number must be between 1 and 12');
+      } else {
+        setTableNoError('');
+      }
+    }
   };
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    onSubmit(formData);
+    if (!tableNoError) {
+      onSubmit(formData);
+    }
   };
 
   return (
@@ -30,10 +42,10 @@ const CheckoutForm: React.FC<CheckoutFormProps> = ({ onSubmit, onCancel }) => {
       </div>
       <form onSubmit={handleSubmit} className="p-4 space-y-4">
         {[ 
-          { name: 'tableNo', label: 'Table Number', icon: Hash, type: 'text' },
+          { name: 'tableNo', label: 'Table Number', icon: Hash, type: 'number', min: 1, max: 12 },
           { name: 'name', label: 'Your Name', icon: User, type: 'text' },
           { name: 'phoneNo', label: 'Phone Number', icon: Phone, type: 'tel' },
-        ].map(({ name, label, icon: Icon, type }) => (
+        ].map(({ name, label, icon: Icon, type, min, max }) => (
           <div key={name} className="mb-4">
             <label htmlFor={name} className="block text-sm font-medium text-gray-700 mb-1">
               {label}
@@ -46,6 +58,8 @@ const CheckoutForm: React.FC<CheckoutFormProps> = ({ onSubmit, onCancel }) => {
                 type={type}
                 name={name}
                 id={name}
+                min={min}
+                max={max}
                 className="focus:ring-green-500 focus:border-green-500 block w-full pl-10 pr-3 py-2 sm:text-sm border-gray-300 rounded-md"
                 placeholder={`Enter ${label.toLowerCase()}`}
                 value={formData[name as keyof typeof formData]}
@@ -53,12 +67,16 @@ const CheckoutForm: React.FC<CheckoutFormProps> = ({ onSubmit, onCancel }) => {
                 required
               />
             </div>
+            {name === 'tableNo' && tableNoError && (
+              <p className="mt-1 text-sm text-red-600">{tableNoError}</p>
+            )}
           </div>
         ))}
         <div className="flex flex-col space-y-2 pt-2">
           <button
             type="submit"
             className="w-full flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-green-600 hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500"
+            disabled={!!tableNoError}
           >
             Confirm Order
           </button>
