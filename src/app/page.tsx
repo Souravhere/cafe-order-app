@@ -191,7 +191,7 @@ export default function Component() {
       doc.setFontSize(12);
       billPopup.orderDetails.items.forEach(item => {
         doc.text(`${item.name} x${item.quantity}`, 20, y);
-        doc.text(`₹${item.totalItemPrice.toFixed(2)}`, 180, y, { align: 'right' });
+        doc.text(`Rs. ${item.totalItemPrice.toFixed(2)}`, 180, y, { align: 'right' });
         y += lineHeight;
       });
 
@@ -201,14 +201,14 @@ export default function Component() {
 
       // Add totals
       doc.text('Subtotal:', 20, y);
-      doc.text(`₹${billPopup.orderDetails.subtotal.toFixed(2)}`, 180, y, { align: 'right' });
+      doc.text(`Rs. ${billPopup.orderDetails.subtotal.toFixed(2)}`, 180, y, { align: 'right' });
       y += lineHeight;
       doc.text(`GST (${(GST_RATE * 100).toFixed(0)}%):`, 20, y);
-      doc.text(`₹${billPopup.orderDetails.gstAmount.toFixed(2)}`, 180, y, { align: 'right' });
+      doc.text(`Rs. ${billPopup.orderDetails.gstAmount.toFixed(2)}`, 180, y, { align: 'right' });
       y += lineHeight;
       doc.setFontSize(14);
       doc.text('Total:', 20, y);
-      doc.text(`₹${billPopup.orderDetails.totalPrice.toFixed(2)}`, 180, y, { align: 'right' });
+      doc.text(`Rs. ${billPopup.orderDetails.totalPrice.toFixed(2)}`, 180, y, { align: 'right' });
 
       // Save the PDF
       doc.save('receipt.pdf');
