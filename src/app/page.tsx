@@ -286,26 +286,26 @@ export default function Component() {
       {billPopup.isOpen && billPopup.orderDetails && (
         <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
           <div className="bg-white rounded-lg max-w-md w-full max-h-[90vh] overflow-y-auto p-6">
-            <h2 className="text-2xl font-bold text-center mb-4">{restaurantDetails.name}</h2>
+            <h2 className="text-2xl text-black font-bold text-center mb-4">{restaurantDetails.name}</h2>
             <p className="text-center text-gray-600 mb-1">{restaurantDetails.address}</p>
             <p className="text-center text-gray-600 mb-1">Phone: {restaurantDetails.phone}</p>
             <p className="text-center text-gray-600 mb-4">Email: {restaurantDetails.email}</p>
             
-            <div className="border-t border-b py-2 mb-4">
+            <div className="border-t border-b py-2 mb-4 text-black">
               <p><strong>Table No:</strong> {billPopup.orderDetails.customerInfo.tableNo}</p>
               <p><strong>Customer Name:</strong> {billPopup.orderDetails.customerInfo.name}</p>
               <p><strong>Phone:</strong> {billPopup.orderDetails.customerInfo.phoneNo}</p>
             </div>
 
-            <h3 className="font-bold mb-2">Order Details:</h3>
+            <h3 className="font-bold mb-2 text-black">Order Details:</h3>
             {billPopup.orderDetails.items.map((item, index) => (
-              <div key={index} className="flex justify-between mb-1">
+              <div key={index} className="flex justify-between mb-1 text-black">
                 <span>{item.name} x{item.quantity}</span>
                 <span>₹{item.totalItemPrice.toFixed(2)}</span>
               </div>
             ))}
 
-            <div className="border-t mt-4 pt-2 font-bold text-xl flex justify-between">
+            <div className="border-t mt-4 pt-2 font-bold text-xl flex justify-between text-black">
               <span>Total:</span>
               <span>₹{billPopup.orderDetails.totalPrice.toFixed(2)}</span>
             </div>
