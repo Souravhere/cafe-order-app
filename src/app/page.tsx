@@ -28,6 +28,25 @@ type Popup = {
   isOpen: boolean;
 };
 
+// Add this new type for the bill popup
+type BillPopup = {
+  isOpen: boolean;
+  orderDetails: {
+    customerInfo: { tableNo: string; name: string; phoneNo: string };
+    items: { name: string; quantity: number; price: number; totalItemPrice: number }[];
+    totalPrice: number;
+  } | null;
+};
+
+// Add this near the top of the file, after the imports
+const restaurantDetails = {
+  name: "Your Cafe",
+  address: "123 Main Street, City, Country",
+  phone: "+1 234 567 8900",
+  email: "info@yourcafe.com",
+  website: "www.yourcafe.com"
+};
+
 export default function Component() {
   const [products, setProducts] = useState<Product[]>([]);
   const [cart, setCart] = useState<CartItem[]>([]); // Use CartItem type for cart
@@ -35,6 +54,7 @@ export default function Component() {
   const [activeCategory, setActiveCategory] = useState('All');
   const [popup, setPopup] = useState<Popup>({ message: '', isOpen: false });
   const [isCheckingOut, setIsCheckingOut] = useState(false);
+  const [billPopup, setBillPopup] = useState<BillPopup>({ isOpen: false, orderDetails: null });
 
   useEffect(() => {
     if (productsData && Array.isArray(productsData.products)) {
@@ -113,22 +133,16 @@ export default function Component() {
 
     console.log('Order placed:', orderDetails);
 
-    // Log individual details for easier reading
-    console.log('Customer Information:');
-    console.log('Table Number:', formData.tableNo);
-    console.log('Name:', formData.name);
-    console.log('Phone Number:', formData.phoneNo);
-    
-    console.log('\nOrdered Items:');
-    cart.forEach(item => {
-      console.log(`${item.name} - Quantity: ${item.quantity}, Price: ₹${item.price.toFixed(2)}, Total: ₹${(item.price * item.quantity).toFixed(2)}`);
-    });
-    
-    console.log('\nTotal Order Price:', `₹${totalPrice.toFixed(2)}`);
+    // Show the bill popup
+    setBillPopup({ isOpen: true, orderDetails });
 
     setCart([]);
     setShowCart(false);
     setIsCheckingOut(false);
+  };
+
+  const closeBillPopup = () => {
+    setBillPopup({ isOpen: false, orderDetails: null });
     showPopup('Order placed successfully!');
   };
 
@@ -265,6 +279,43 @@ export default function Component() {
                 />
               )}
             </div>
+          </div>
+        </div>
+      )}
+
+      {billPopup.isOpen && billPopup.orderDetails && (
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+          <div className="bg-white rounded-lg max-w-md w-full max-h-[90vh] overflow-y-auto p-6">
+            <h2 className="text-2xl font-bold text-center mb-4">{restaurantDetails.name}</h2>
+            <p className="text-center text-gray-600 mb-1">{restaurantDetails.address}</p>
+            <p className="text-center text-gray-600 mb-1">Phone: {restaurantDetails.phone}</p>
+            <p className="text-center text-gray-600 mb-4">Email: {restaurantDetails.email}</p>
+            
+            <div className="border-t border-b py-2 mb-4">
+              <p><strong>Table No:</strong> {billPopup.orderDetails.customerInfo.tableNo}</p>
+              <p><strong>Customer Name:</strong> {billPopup.orderDetails.customerInfo.name}</p>
+              <p><strong>Phone:</strong> {billPopup.orderDetails.customerInfo.phoneNo}</p>
+            </div>
+
+            <h3 className="font-bold mb-2">Order Details:</h3>
+            {billPopup.orderDetails.items.map((item, index) => (
+              <div key={index} className="flex justify-between mb-1">
+                <span>{item.name} x{item.quantity}</span>
+                <span>₹{item.totalItemPrice.toFixed(2)}</span>
+              </div>
+            ))}
+
+            <div className="border-t mt-4 pt-2 font-bold text-xl flex justify-between">
+              <span>Total:</span>
+              <span>₹{billPopup.orderDetails.totalPrice.toFixed(2)}</span>
+            </div>
+
+            <button 
+              className="mt-6 w-full bg-green-500 text-white py-2 px-4 rounded-lg hover:bg-green-600 transition-colors"
+              onClick={closeBillPopup}
+            >
+              Close
+            </button>
           </div>
         </div>
       )}
