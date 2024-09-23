@@ -44,8 +44,8 @@ type BillPopup = {
 // Add this near the top of the file, after the imports
 const restaurantDetails = {
   name: "Your Cafe",
-  address: "123 Main Street, City, Country",
-  phone: "+1 234 567 8900",
+  address: "123 Main Street, Jaipur, Raj.",
+  phone: "+91 6367477611",
   email: "info@yourcafe.com",
   website: "www.yourcafe.com"
 };
