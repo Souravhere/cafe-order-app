@@ -6,6 +6,7 @@ import { ShoppingCart, X, Plus, Minus } from 'lucide-react';
 import { Trash2 } from 'lucide-react';
 import productsData from '../data/products.json';
 import CheckoutForm from '../Components/CheckoutForm';
+import jsPDF from 'jspdf';
 
 // Define Product type
 type Product = {
@@ -155,6 +156,63 @@ export default function Component() {
   const closeBillPopup = () => {
     setBillPopup({ isOpen: false, orderDetails: null });
     showPopup('Order placed successfully!');
+  };
+
+  const downloadReceipt = () => {
+    if (billPopup.orderDetails) {
+      const doc = new jsPDF();
+      const lineHeight = 10;
+      let y = 20;
+
+      // Add restaurant details
+      doc.setFontSize(18);
+      doc.text(restaurantDetails.name, 105, y, { align: 'center' });
+      y += lineHeight * 1.5;
+      doc.setFontSize(12);
+      doc.text(restaurantDetails.address, 105, y, { align: 'center' });
+      y += lineHeight;
+      doc.text(`Phone: ${restaurantDetails.phone}`, 105, y, { align: 'center' });
+      y += lineHeight;
+      doc.text(`Email: ${restaurantDetails.email}`, 105, y, { align: 'center' });
+      y += lineHeight * 1.5;
+
+      // Add customer details
+      doc.text(`Table No: ${billPopup.orderDetails.customerInfo.tableNo}`, 20, y);
+      y += lineHeight;
+      doc.text(`Customer Name: ${billPopup.orderDetails.customerInfo.name}`, 20, y);
+      y += lineHeight;
+      doc.text(`Phone: ${billPopup.orderDetails.customerInfo.phoneNo}`, 20, y);
+      y += lineHeight * 1.5;
+
+      // Add order details
+      doc.setFontSize(14);
+      doc.text('Order Details:', 20, y);
+      y += lineHeight;
+      doc.setFontSize(12);
+      billPopup.orderDetails.items.forEach(item => {
+        doc.text(`${item.name} x${item.quantity}`, 20, y);
+        doc.text(`₹${item.totalItemPrice.toFixed(2)}`, 180, y, { align: 'right' });
+        y += lineHeight;
+      });
+
+      y += lineHeight * 0.5;
+      doc.line(20, y, 190, y);
+      y += lineHeight;
+
+      // Add totals
+      doc.text('Subtotal:', 20, y);
+      doc.text(`₹${billPopup.orderDetails.subtotal.toFixed(2)}`, 180, y, { align: 'right' });
+      y += lineHeight;
+      doc.text(`GST (${(GST_RATE * 100).toFixed(0)}%):`, 20, y);
+      doc.text(`₹${billPopup.orderDetails.gstAmount.toFixed(2)}`, 180, y, { align: 'right' });
+      y += lineHeight;
+      doc.setFontSize(14);
+      doc.text('Total:', 20, y);
+      doc.text(`₹${billPopup.orderDetails.totalPrice.toFixed(2)}`, 180, y, { align: 'right' });
+
+      // Save the PDF
+      doc.save('receipt.pdf');
+    }
   };
 
   return (
@@ -331,12 +389,20 @@ export default function Component() {
               </div>
             </div>
 
-            <button 
-              className="mt-6 w-full bg-green-500 text-white py-2 px-4 rounded-lg hover:bg-green-600 transition-colors"
-              onClick={closeBillPopup}
-            >
-              Close
-            </button>
+            <div className="flex space-x-4 mt-6">
+              <button 
+                className="flex-1 bg-green-500 text-white py-2 px-4 rounded-lg hover:bg-green-600 transition-colors"
+                onClick={closeBillPopup}
+              >
+                Close
+              </button>
+              <button 
+                className="flex-1 bg-blue-500 text-white py-2 px-4 rounded-lg hover:bg-blue-600 transition-colors"
+                onClick={downloadReceipt}
+              >
+                Download Receipt
+              </button>
+            </div>
           </div>
         </div>
       )}
